@@ -13,6 +13,7 @@ const CLIENT_ID = process.env.SHOPIFY_CLIENT_ID;
 const CLIENT_SECRET = process.env.SHOPIFY_CLIENT_SECRET;
 const SCOPES = "write_content,read_content,write_files";
 const REDIRECT_URI = "http://localhost:3000/auth/callback";
+const SHOPIFY_SHOP = process.env.SHOPIFY_SHOP;
 
 app.get("/install", (req, res) => {
   const shop = req.query.shop;
@@ -64,19 +65,15 @@ app.get("/auth/callback", async (req, res) => {
     });
 
     const data = await response.json();
-    if (fs.existsSync(`.env`)) {
-      fs.appendFileSync(
-        `.env`,
-        `SHOPIFY_ACCESS_TOKEN=${data.access_token}\nSHOPIFY_SHOP=${shop}\n`,
-      );
-    } else {
-      fs.writeFileSync(
-        `.env`,
-        `SHOPIFY_ACCESS_TOKEN=${data.access_token}\nSHOPIFY_SHOP=${shop}\n`,
-      );
-    }
+    fs.appendFileSync(
+      `.env`,
+      `\n
+      # Authenticated Admin Access Token \n
+      SHOPIFY_ACCESS_TOKEN=${data.access_token}`,
+    );
+
     res.send(
-      `<h1>App Installed Successfully!</h1><p>Shop: ${shop}</p><p>Access Token: ${data.access_token.substring(0, 20)}...</p><p>Token saved to .env</p><p>Scopes: ${data.scope}</p>`,
+      `<h1>App Installed Successfully!</h1><p>Shop: ${shop}</p><p>Access Token: ${data.access_token.substring(0, 20)}... Check your code. You won't get everything here.</p><p>Token saved to .env</p><p>Scopes: ${data.scope}</p>`,
     );
   } catch (error) {
     console.error("Error getting access token:", error);
@@ -87,6 +84,6 @@ app.get("/auth/callback", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log(
-    `\nTo install the app, visit:\nhttp://localhost:${PORT}/install?shop=00frvp-xr.myshopify.com`,
+    `\nTo install the app, visit:\nhttp://localhost:${PORT}/install?shop=${SHOPIFY_SHOP}.myshopify.com`,
   );
 });
