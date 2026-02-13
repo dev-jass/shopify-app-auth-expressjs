@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@shopify/shopify-api": "^12.3.0",
+    "axios": "^1.13.5",
+    "cheerio": "^1.2.0",
+    "crypto": "^1.0.1",
+    "csv-parse": "^6.1.0",
+    "dotenv": "^17.2.4",
+    "express": "^5.2.1",
+    "node-fetch": "^3.3.2",
+    "wpapi": "^1.2.2"
+  },
+  "scripts": {
+    "start": "node auth.js"
+  }
+}
